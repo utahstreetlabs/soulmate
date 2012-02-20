@@ -1,58 +1,8 @@
-require 'rubygems'
-require 'bundler'
-begin
-  Bundler.setup(:default, :development)
-rescue Bundler::BundlerError => e
-  $stderr.puts e.message
-  $stderr.puts "Run `bundle install` to install missing gems"
-  exit e.status_code
-end
-require 'rake'
-
-require 'jeweler'
-require './lib/soulmate/version.rb'
-Jeweler::Tasks.new do |gem|
-  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
-  gem.name      = "soulmate"
-  gem.version   = Soulmate::Version::STRING
-  gem.homepage  = "http://github.com/seatgeek/soulmate"
-  gem.license   = "MIT"
-  gem.summary   = %Q{Redis-backed service for fast autocompleting - extracted from SeatGeek}
-  gem.description = %Q{Soulmate is a tool to help solve the common problem of developing a fast autocomplete feature. It uses Redis's sorted sets to build an index of partial words and corresponding top matches, and provides a simple sinatra app to query them. Soulmate finishes your sentences.}
-  gem.email     = "eric@seatgeek.com"
-  gem.homepage  = "http://github.com/seatgeek/soulmate"
-  gem.authors   = ["Eric Waller"]
-  # The versions specified here are pretty arbitrary right now...
-  gem.add_runtime_dependency 'redis',   '>= 2.0'
-  gem.add_runtime_dependency 'vegas',   '>= 0.1.0'
-  gem.add_runtime_dependency 'sinatra', '>= 1.0'
-  gem.add_runtime_dependency 'json',    '~> 1.4.6'
-  #  gem.add_development_dependency 'rspec', '> 1.2.3'
-end
-Jeweler::RubygemsDotOrgTasks.new
-
 require 'rake/testtask'
 Rake::TestTask.new(:test) do |test|
   test.libs << 'lib' << 'test'
   test.pattern = 'test/**/test_*.rb'
   test.verbose = true
-end
-
-require 'rcov/rcovtask'
-Rcov::RcovTask.new do |test|
-  test.libs << 'test'
-  test.pattern = 'test/**/test_*.rb'
-  test.verbose = true
-end
-
-require 'rdoc/task'
-Rake::RDocTask.new do |rdoc|
-  version = File.exist?('VERSION') ? File.read('VERSION') : ""
-
-  rdoc.rdoc_dir = 'rdoc'
-  rdoc.title = "soulmate #{version}"
-  rdoc.rdoc_files.include('README*')
-  rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
 REDIS_DIR = File.expand_path(File.join("..", "test"), __FILE__)
@@ -64,9 +14,6 @@ task :default => :run
 
 desc "Run tests and manage server start/stop"
 task :run => [:start, :test, :stop]
-
-desc "Run rcov and manage server start/stop"
-task :rcoverage => [:start, :rcov, :stop]
 
 desc "Start the Redis server"
 task :start do
